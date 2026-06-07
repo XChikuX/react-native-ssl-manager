@@ -43,6 +43,20 @@ class HybridSslManager : HybridSslManagerSpec() {
         }
     }
 
+    override fun setTrustPolicy(policyJson: String): Promise<Unit> {
+        val appContext = context
+        return Promise.async {
+            UseSslPinningModuleImpl.setTrustPolicy(appContext, policyJson)
+        }
+    }
+
+    override fun getTrustPolicy(): Promise<String> {
+        val appContext = context
+        return Promise.async {
+            UseSslPinningModuleImpl.getTrustPolicy(appContext)
+        }
+    }
+
     companion object {
         init {
             NitroSslManagerOnLoad.initializeNative()

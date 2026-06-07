@@ -74,9 +74,45 @@ export const setSSLConfig = (
 export const getPinnedDomains = (): Promise<string[]> =>
   requireNative().getPinnedDomains();
 
+/**
+ * Updates the trust policy configuration for the time-bounded TLS trust
+ * engine. Accepts a {@link TrustPolicyConfig} object or a pre-serialized
+ * JSON string.
+ */
+export const setTrustPolicy = (
+  policy: import('./types/TrustPolicy').TrustPolicyConfig | string
+): Promise<void> => {
+  const json: string =
+    typeof policy === 'string' ? policy : JSON.stringify(policy);
+  return requireNative().setTrustPolicy(json);
+};
+
+/**
+ * Resolves to the current trust policy configuration, or `null` if no
+ * policy is configured.
+ */
+export const getTrustPolicy =
+  async (): Promise<import('./types/TrustPolicy').TrustPolicyConfig | null> => {
+    const json = await requireNative().getTrustPolicy();
+    if (!json) {
+      return null;
+    }
+    return JSON.parse(json) as import('./types/TrustPolicy').TrustPolicyConfig;
+  };
+
 /** Direct access to the underlying HybridObject (or `null` if not linked). */
 export const SslPinning = nativeSslManager;
 
 export type { SslManager } from './specs/SslManager.nitro';
 export type { SslPinningConfig } from './types/SslPinningConfig';
 export type { SslPinningError } from './UseSslPinning.types';
+
+// Time-bounded TLS trust engine
+export { TrustEngine } from './TrustEngine';
+export type {
+  TrustPolicyConfig,
+  TrustDecision,
+  TrustEvaluationResult,
+  CertificateInfo,
+  PinEntry,
+} from './TrustEngine';

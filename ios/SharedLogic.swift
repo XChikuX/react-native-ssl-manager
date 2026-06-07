@@ -40,6 +40,7 @@ class SharedLogic: NSObject {
     static var sharedTrustKit: TrustKit?
     private static let useSSLPinningKey = "useSSLPinning"
     private static let sslConfigKey = "sslConfig"
+    private static let trustPolicyKey = "trustPolicy"
     private static let userDefaults = UserDefaults.standard
 
     // TrustKit can only be initialized once per process. Guard against repeated
@@ -311,5 +312,31 @@ class SharedLogic: NSObject {
             "message": "SSL Pinning initialized successfully",
             "domains": Array(pinnedDomains.keys)
         ]
+    }
+
+    // MARK: - Trust Policy (Time-Bounded TLS Trust Engine)
+
+    /**
+     * Persist a trust policy configuration (JSON string).
+     * The trust policy includes pins with expiry dates, issuer allowlists,
+     * and grace window settings for the time-bounded TLS trust engine.
+     */
+    @objc static func setTrustPolicy(_ policyJson: String) throws {
+        // Validate the JSON structure
+        guard let data = policyJson.data(using: .utf8),
+              let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+              json["pins"] is [String: Any] else {
+            throw SSLPinningError.invalidConfiguration
+        }
+        userDefaults.set(policyJson, forKey: trustPolicyKey)
+        userDefaults.synchronize()
+    }
+
+    /**
+     * Return the persisted trust policy JSON string, or an empty string
+     * if no policy is configured.
+     */
+    @objc static func getTrustPolicy() -> String {
+        return userDefaults.string(forKey: trustPolicyKey) ?? ""
     }
 }
