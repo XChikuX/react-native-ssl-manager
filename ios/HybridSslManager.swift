@@ -58,4 +58,20 @@ final class HybridSslManager: HybridSslManagerSpec {
             return SharedLogic.getPinnedDomains()
         }
     }
+
+    func setTrustPolicy(policyJson: String) throws -> Promise<Void> {
+        return Promise.parallel(Self.queue) {
+            do {
+                try SharedLogic.setTrustPolicy(policyJson)
+            } catch let error as SSLPinningError {
+                throw RuntimeError.error(withMessage: "\(error.code): \(error.message)")
+            }
+        }
+    }
+
+    func getTrustPolicy() throws -> Promise<String> {
+        return Promise.parallel(Self.queue) {
+            return SharedLogic.getTrustPolicy()
+        }
+    }
 }

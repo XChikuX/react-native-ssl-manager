@@ -75,6 +75,8 @@ describe('Nitro module wiring', () => {
     expect(spec).toContain('getUseSSLPinning');
     expect(spec).toContain('setSSLConfig');
     expect(spec).toContain('getPinnedDomains');
+    expect(spec).toContain('setTrustPolicy');
+    expect(spec).toContain('getTrustPolicy');
   });
 
   it('autolinks SslManager to HybridSslManager on both platforms', () => {
@@ -93,6 +95,9 @@ describe('Nitro module wiring', () => {
     expect(index).toContain('export const setSSLConfig');
     expect(index).toContain('export const getPinnedDomains');
     expect(index).toContain('export const isSSLManagerAvailable');
+    expect(index).toContain('export const setTrustPolicy');
+    expect(index).toContain('export const getTrustPolicy');
+    expect(index).toContain("export { TrustEngine }");
   });
 
   it('is implemented natively on both platforms', () => {
@@ -100,6 +105,8 @@ describe('Nitro module wiring', () => {
     expect(swift).toContain('class HybridSslManager');
     expect(swift).toContain('setSSLConfig');
     expect(swift).toContain('getPinnedDomains');
+    expect(swift).toContain('setTrustPolicy');
+    expect(swift).toContain('getTrustPolicy');
 
     const kotlin = read(
       'android',
@@ -115,6 +122,8 @@ describe('Nitro module wiring', () => {
     expect(kotlin).toContain('class HybridSslManager');
     expect(kotlin).toContain('setSSLConfig');
     expect(kotlin).toContain('getPinnedDomains');
+    expect(kotlin).toContain('setTrustPolicy');
+    expect(kotlin).toContain('getTrustPolicy');
   });
 });
 

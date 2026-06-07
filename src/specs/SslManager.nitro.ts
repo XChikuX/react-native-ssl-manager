@@ -37,4 +37,19 @@ export interface SslManager
    * configuration if set, otherwise the bundled `ssl_config.json`).
    */
   getPinnedDomains(): Promise<string[]>;
+
+  /**
+   * Updates the trust policy configuration for the time-bounded TLS trust
+   * engine. This includes pin entries with expiration dates, issuer
+   * allowlists, and grace window settings.
+   *
+   * @throws if the configuration is invalid.
+   */
+  setTrustPolicy(policyJson: string): Promise<void>;
+
+  /**
+   * Resolves to the current trust policy configuration as a JSON string,
+   * or an empty string if no policy is configured.
+   */
+  getTrustPolicy(): Promise<string>;
 }

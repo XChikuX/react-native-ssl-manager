@@ -9,7 +9,8 @@ We want this community to be friendly and respectful to each other. Please follo
 This project is a monorepo managed using [Yarn workspaces](https://yarnpkg.com/features/workspaces). It contains the following packages:
 
 - The library package in the root directory.
-- An example app in the `example/` directory.
+- A bare React Native example app in the `example/` directory.
+- An Expo example app in the `example-expo/` directory.
 
 To get started with the project, run `yarn` in the root directory to install the required dependencies for each package:
 
@@ -23,9 +24,9 @@ The [example app](/example/) demonstrates usage of the library. You need to run 
 
 It is configured to use the local version of the library, so any changes you make to the library's source code will be reflected in the example app. Changes to the library's JavaScript code will be reflected in the example app without a rebuild, but native code changes will require a rebuild of the example app.
 
-If you want to use Android Studio or XCode to edit the native code, you can open the `example/android` or `example/ios` directories respectively in those editors. To edit the Objective-C or Swift files, open `example/ios/UseSslPinningExample.xcworkspace` in XCode and find the source files at `Pods > Development Pods > react-native-ssl-manager`.
+If you want to use Android Studio or Xcode to edit the native code, you can open the `example/android` or `example/ios` directories respectively in those editors. To edit the Swift files, open `example/ios/UseSslPinningExample.xcworkspace` in Xcode and find the source files at `Pods > Development Pods > NitroSslManager`.
 
-To edit the Java or Kotlin files, open `example/android` in Android studio and find the source files at `react-native-ssl-manager` under `Android`.
+To edit the Kotlin files, open `example/android` in Android Studio and find the source files at `react-native-ssl-manager` under `Android`.
 
 You can use various commands from the root directory to work with the project.
 
@@ -105,9 +106,13 @@ The `package.json` file contains various scripts for common tasks:
 - `yarn typecheck`: type-check files with TypeScript.
 - `yarn lint`: lint files with ESLint.
 - `yarn test`: run unit tests with Jest.
-- `yarn example start`: start the Metro server for the example app.
-- `yarn example android`: run the example app on Android.
-- `yarn example ios`: run the example app on iOS.
+- `yarn specs`: regenerate native bindings from the Nitro spec (`src/specs/SslManager.nitro.ts`).
+- `yarn example start`: start the Metro server for the bare React Native example app.
+- `yarn example android`: run the bare React Native example app on Android.
+- `yarn example ios`: run the bare React Native example app on iOS.
+- `yarn example-expo:start`: start the Expo example app.
+- `yarn example-expo:android`: run the Expo example app on Android.
+- `yarn example-expo:ios`: run the Expo example app on iOS.
 
 ### Sending a pull request
 

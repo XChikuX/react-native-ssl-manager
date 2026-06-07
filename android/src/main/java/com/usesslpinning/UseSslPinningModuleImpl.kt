@@ -11,6 +11,7 @@ object UseSslPinningModuleImpl {
     private const val PREFS = "AppSettings"
     private const val KEY_USE_PINNING = "useSSLPinning"
     private const val KEY_CONFIG = "sslConfig"
+    private const val KEY_TRUST_POLICY = "trustPolicy"
 
     /**
      * Install the pinned OkHttpClientFactory. Safe to call from app startup
@@ -78,6 +79,28 @@ object UseSslPinningModuleImpl {
             domains.add(keys.next())
         }
         return domains.toTypedArray()
+    }
+
+    /**
+     * Persist a trust policy configuration (JSON string) for the time-bounded
+     * TLS trust engine. Validates that the JSON contains a "pins" object.
+     * Throws on invalid configuration.
+     */
+    fun setTrustPolicy(context: Context, policyJson: String) {
+        val json = JSONObject(policyJson)
+        require(json.has("pins")) { "Trust policy must contain a 'pins' object" }
+
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        prefs.edit().putString(KEY_TRUST_POLICY, policyJson).apply()
+    }
+
+    /**
+     * Return the persisted trust policy JSON string, or an empty string
+     * if no policy is configured.
+     */
+    fun getTrustPolicy(context: Context): String {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        return prefs.getString(KEY_TRUST_POLICY, "") ?: ""
     }
 
     private fun buildConfigJson(sha256Keys: Map<String, Array<String>>): String {
